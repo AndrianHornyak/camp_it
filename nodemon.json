@@ -1,0 +1,9 @@
+{
+    "env": {
+        "MONGO_ATLAS_PW": "node-shop",
+        "JWT_KEY": "aslkdajsldiazoiuxcz8q283q129easdgaasd289q12",
+        "ORDER_CHAT_ID": "-1001243837792",
+        "BOT_TOKEN": "1166969323:AAFoW387e9fwQ8ARHBoKGlJcDCIf8RKqVcY",
+        "VEREFICATION_KEY":"D4236598362FH922DJ29DJ"
+    }
+}
