@@ -2,7 +2,7 @@ const express = require ('express')
 const router = express.Router()
 const CheckAuth = require('../../middleware/check-auth.js')
 
-const OrderController = require ('./orderController')
+const OrderController = require ('./controller.js')
 
 const BASE_URL = "/order";
 const BASE_URL_1 = "/orders";

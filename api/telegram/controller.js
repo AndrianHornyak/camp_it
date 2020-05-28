@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Camp = require('../camps/campModel')
+const Camp = require('../camps/model.js')
 
 exports.verefication = async (req, res, next) => {
     try {

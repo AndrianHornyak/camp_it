@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
-const Admin = require('../admin/adminModel')
-const Owner = require('../owners/ownerModel')
-const Camp = require('./campModel')
-const Comment = require('../comments/commentModel')
+const Admin = require('../admin/model.js')
+const Owner = require('../owners/model.js')
+const Camp = require('./model.js')
+const Comment = require('../comments/model.js')
 const {
     isEmpty
 } = require('lodash')
@@ -430,6 +430,10 @@ exports.patch = async (req, res, next) => {
                 if (err) return res.send(500, {
                     error: err
                 });
+                send("PATCH_CAMP", {
+                    name: owner.name,
+                    camp: req.body.camp
+                })
                 return res.status(200).json({
                     request: {
                         type: 'PATCH',

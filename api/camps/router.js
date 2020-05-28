@@ -28,7 +28,7 @@ const upload = multer({
     fileFilter: fileFilter
 })
 
-const CampController = require('./campController')
+const CampController = require('./controller.js')
 const BASE_URL = "/camp";
 const BASE_URL_1 = "/camps"
 

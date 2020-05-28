@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
-const Comment = require('../comments/commentModel')
-const Admin = require('../admin/adminModel')
-const Camp = require('../camps/campModel')
-const User = require('../users/userModel')
-const Owner = require('../owners/ownerModel')
+const Comment = require('../comments/model.js')
+const Admin = require('../admin/model.js')
+const Camp = require('../camps/model.js')
+const User = require('../users/model.js')
+const Owner = require('../owners/model.js')
 
 exports.get_all = async (req, res, next) => {
     try {

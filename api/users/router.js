@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const CheckAuth = require('../../middleware/check-auth.js')
 
-const UserController = require ('./userController')
+const UserController = require ('./controller.js')
 
 const BASE_URL = "/user";
 

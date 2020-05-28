@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const CheckAuth = require('../../middleware/check-auth.js')
 
-const commentController = require('./commentController')
+const commentController = require('./controller.js')
 
 const BASE_URL = "/camp/comment";
 const BASE_URL_1 = "/comments";

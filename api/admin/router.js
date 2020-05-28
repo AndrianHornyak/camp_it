@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const AdminController = require ('./adminController')
+const AdminController = require ('./controller.js')
 const BASE_URL = "/admin";
 
 router.post(`${BASE_URL}/login`, AdminController.login)

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const Admin = require('./adminModel')
+const Admin = require('./model.js')
 exports.login = (req, res, next) => {
     try {
         Admin.findOne({

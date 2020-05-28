@@ -2,16 +2,16 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const Owner = require('./ownerModel')
-const Admin = require('../admin/adminModel')
+const User = require('./model.js')
+const Admin = require('../admin/model.js')
 
 exports.signup = (req, res, next) => {
     try {
-        Owner.find({
+        User.find({
                 email: req.body.email
             })
-            .then(owner => {
-                if (owner.length >= 1) {
+            .then(user => {
+                if (user.length >= 1) {
                     res.status(409).json({
                         message: 'Mail exists'
                     })
@@ -19,33 +19,37 @@ exports.signup = (req, res, next) => {
                     bcrypt.hash(req.body.password, 10, (err, hash) => {
                         if (err) {
                             res.status(500).json({
-                                error: err
+                                error: err.message
                             })
                         } else {
                             let params = req.body
                             params._id = new mongoose.Types.ObjectId()
                             params.password = hash
-                            const owner = new Owner(params)
+                            const user = new User()
                             const token = jwt.sign({
-                                    email: owner.email,
-                                    id: owner._id
+                                    email: user.email,
+                                    user: user._id
                                 },
                                 process.env.JWT_KEY, {
                                     expiresIn: '20m',
                                 }
                             )
-                            owner.save()
+                            user.save()
                             res.status(201).json({
                                 request: {
-                                    message: 'Owner created',
+                                    type: "POST",
+                                    message: 'User created',
                                     status: 'success',
-                                    owner: {
-                                        email: owner.email,
-                                        name: owner.name,
-                                        phone: owner.phone,
-                                        telegram: owner.telegram,
-                                        city: owner.city,
-                                        site: owner.site
+                                    user: {
+                                        id: user.id,
+                                        email: user.email,
+                                        name: user.name,
+                                        phone: user.phone,
+                                        city: user.city,
+                                        childrens: {
+                                            kid_name:user.kid_name,
+                                            kid_age: user.kid_age
+                                        }
                                     },
                                     token: token,
                                 }
@@ -57,7 +61,7 @@ exports.signup = (req, res, next) => {
             .catch(err => {
                 console.log(err)
                 res.status(500).json({
-                    error: err
+                    error: err.message
                 })
             })
     } catch (err) {
@@ -71,28 +75,26 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     try {
-        Owner.findOne({
+        User.findOne({
                 email: req.body.email
             })
             .exec()
-            .then(owner => {
-                if (owner.length < 1) {
+            .then(user => {
+                if (user.length < 1) {
                     return res.status(401).json({
-                        error: err.message,
                         message: 'Auth failed'
                     })
                 }
-                bcrypt.compare(req.body.password, owner.password, (err, result) => {
+                bcrypt.compare(req.body.password, user.password, (err, result) => {
                     if (err) {
                         return res.status(401).json({
                             message: 'Auth failed'
                         })
                     }
-                    console.log('owner.email :', owner.email)
                     if (result) {
                         const token = jwt.sign({
-                                email: owner.email,
-                                id: owner._id
+                                email: user.email,
+                                id: user._id
                             },
                             process.env.JWT_KEY, {
                                 expiresIn: '20m',
@@ -101,16 +103,18 @@ exports.login = (req, res, next) => {
                         return res.status(200).json({
                             request: {
                                 type: 'POST',
-                                description: 'Login Owner',
+                                description: 'Login User',
                                 message: 'Auth successful',
-                                owner: {
-                                    id: owner.id,
-                                    email: owner.email,
-                                    name: owner.name,
-                                    phone: owner.phone,
-                                    telegram: owner.telegram,
-                                    city: owner.city,
-                                    site: owner.site
+                                user: {
+                                    id: user.id,
+                                    email: user.email,
+                                    name: user.name,
+                                    phone: user.phone,
+                                    city: user.city,
+                                    childrens: {
+                                        kid_name:user.kid_name,
+                                        kid_age:user.kid_age
+                                    }
                                 },
                                 token: token
                             }
@@ -137,22 +141,24 @@ exports.login = (req, res, next) => {
 
 exports.get = async (req, res, next) => {
     try {
-        const id = req.params.ownerId
-        let owner = await Owner.findById({
+        const id = req.params.userId
+        let user = await User.findById({
             _id: id
         }).exec()
         return res.status(200).json({
             request: {
                 type: 'GET',
-                description: 'Get Owner by Id',
-                owner: {
-                    id: owner.id,
-                    email: owner.email,
-                    name: owner.name,
-                    phone: owner.phone,
-                    telegram: owner.telegram,
-                    city: owner.city,
-                    site: owner.site
+                description: 'Get User by Id',
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone,
+                    city: user.city,
+                    childrens: {
+                        kid_name: user.kid_name,
+                        kid_age: user.kid_age
+                    }
                 }
             }
         })
@@ -167,26 +173,25 @@ exports.get = async (req, res, next) => {
 
 exports.patch = async (req, res, next) => {
     try {
-        const owner = await Owner.findById(req.body.ownerId)
-        if (owner.id === String(req.params.ownerId)) {
-            Owner.updateOne({
-                _id: req.params.ownerId
-            }, req.body.owner, function (err, owner) {
+        const user = await User.findById(req.body.userId)
+        if (user.id === String(req.params.userId)) {
+            User.updateOne({
+                _id: req.params.userId
+            }, req.body.user, function (err, user) {
                 if (err) return res.send(500, {
                     error: err
                 });
                 return res.status(200).json({
                     request: {
                         type: 'PATCH',
-                        message: 'Owner updated',
-                        description: 'Patch Owner by Id',
-                        update: req.body.owner
+                        message: 'User updated',
+                        description: 'Patch User by Id',
+                        update: req.body.user
                     }
                 })
             });
         } else {
             res.status(401).json({
-                error: err.message,
                 message: 'Auth failed'
             })
         }
@@ -202,17 +207,17 @@ exports.patch = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
     try {
         const admin = await Admin.findById(req.body.adminId)
-        const owner = await Owner.findById(req.body.ownerId)
-        if (admin || owner.id === String(req.params.ownerId)) {
-            Owner.findByIdAndDelete({
-                _id: req.params.ownerId
+        const user = await User.findById(req.body.userId)
+        if (admin || user.id === String(req.params.userId)) {
+            User.findByIdAndDelete({
+                _id: req.params.userId
             }, function (err) {
                 if (err) console.log(err);
                 return res.status(200).json({
                     request: {
                         type: 'DELETE',
-                        message: 'Owner deleted',
-                        description: 'Delete Owner by Id'
+                        message: 'User deleted',
+                        description: 'Delete User by Id'
                     }
                 })
             });

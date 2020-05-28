@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
-const Order = require('./orderModel')
-const Admin = require('../admin/adminModel')
-const Camp = require('../camps/campModel')
-const User = require('../users/userModel')
-const Owner = require('../owners/ownerModel')
+const Order = require('./model.js')
+const Admin = require('../admin/model.js')
+const Camp = require('../camps/model.js')
+const User = require('../users/model.js')
+const Owner = require('../owners/model.js')
 
 // Telegraf
 const Telegraf = require("telegraf");

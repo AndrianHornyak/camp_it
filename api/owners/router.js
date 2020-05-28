@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const CheckAuth = require('../../middleware/check-auth.js')
 
-const OnwerController = require ('./ownerController')
+const OnwerController = require ('./controller.js')
 const BASE_URL = "/owner";
 
 router.post(`${BASE_URL}/signup`, OnwerController.signup)
