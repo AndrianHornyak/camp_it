@@ -4,11 +4,12 @@ const CheckAuth = require('../../middleware/check-auth.js')
 
 const UserController = require ('./userController')
 
-router.post('/user/signup', UserController.signup)
-.post('/user/login', UserController.login)
-.get('/user/:userId', UserController.get)
-.patch('/user/:userId', CheckAuth, UserController.patch)
-.delete('/user/:userId', CheckAuth, UserController.delete)
+const BASE_URL = "/user";
 
+router.post(`${BASE_URL}/signup`, UserController.signup)
+.post(`${BASE_URL}/login`, UserController.login)
+.get(`${BASE_URL}/:userId`, UserController.get)
+.patch(`${BASE_URL}/:userId`,CheckAuth,UserController.patch)
+.delete(`${BASE_URL}/:userId`,CheckAuth, UserController.delete)
 
 module.exports = router

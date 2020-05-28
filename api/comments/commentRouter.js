@@ -4,10 +4,13 @@ const CheckAuth = require('../../middleware/check-auth.js')
 
 const commentController = require('./commentController')
 
-router.get('/comments',CheckAuth, commentController.get_all)
-.post('/camp/comment/',CheckAuth, commentController.post)
-.get('/camp/comment/:commentId',CheckAuth, commentController.get )
-.patch('/camp/comment/:commentId',CheckAuth, commentController.patch )
-.delete('/camp/comment/:commentId',CheckAuth, commentController.delete )
+const BASE_URL = "/camp/comment";
+const BASE_URL_1 = "/comments";
+
+router.get(`${BASE_URL_1}`,CheckAuth, commentController.get_all)
+.post(`${BASE_URL}/`,CheckAuth, commentController.post)
+.get(`${BASE_URL}/:commentId`,CheckAuth, commentController.get )
+.patch(`${BASE_URL}/:commentId`,CheckAuth, commentController.patch )
+.delete(`${BASE_URL}/:commentId`,CheckAuth, commentController.delete )
 
 module.exports = router
