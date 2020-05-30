@@ -14,15 +14,11 @@ const sendMessage = async (text, keyboard) => {
     console.log('error :>> ', error);
   }
 }
-  
-
 // Главна ф-ція яку ми іспользуємо в контролері (Підключаємо в контролер) 
 // Передаємо в функцію статус і обєкт з параметрами
 // Приклад: 
 // send("PAID", {name: "Снікерс", price: toFloat("19.90")})
-
 const send = async (status, params) => {
-  // зчитуємо параметри
   const {
     name,
     price,
@@ -31,11 +27,7 @@ const send = async (status, params) => {
     keyboard
   } = params;
 
-  //Оголошуємо зміну "текст"
   let text = "";
-
-  // Робимо конструкцію "світч"
-  // Для того, шоб в залежності від статусу, ми відправляли різні типи сообщеній
 
   switch (status) {
     case "CREATED":

@@ -29,7 +29,7 @@ exports.needverification = async (req, res, next) => {
                 request: {
                     type: 'GET',
                     description: 'Get all camps status "moderation"',
-                    count: camp.length,
+                    campLength: camp.length,
                     camp: camp,
                 }
             })
@@ -88,7 +88,7 @@ exports.get_all = async (req, res, next) => {
             request: {
                 type: 'GET',
                 description: 'Get all camps status "verificated"',
-                count: camp.length,
+                campLength: camp.length,
                 camps: camp.map(camp => {
                     return {
                         camp: {
@@ -159,7 +159,7 @@ exports.get_byDate = async (req, res, next) => {
             request: {
                 type: 'GET',
                 description: 'Get all camps status "verificated"',
-                count: camp.length,
+                campcampLength: camp.length,
                 camps: camp.map(camp => {
                     return {
                         camp: {
@@ -236,7 +236,7 @@ exports.get_filter = async (req, res, next) => {
             // request: {
             //     type: 'GET',
             //     description: 'Get all camps status "verificated"',
-            //     count: camps.length,
+            //     campLength: camps.length,
             //     camps: camps.map(camp => {
             //         return {
             //             camp: {
@@ -404,7 +404,7 @@ exports.get = async (req, res, next) => {
 
                 },
                 comments: {
-                    count: comment.length,
+                    campLength: comment.length,
                     comment: comment
                 }
             }

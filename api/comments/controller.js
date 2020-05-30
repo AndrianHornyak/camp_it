@@ -16,7 +16,7 @@ exports.get_all = async (req, res, next) => {
             }).exec()
             res.status(200).json({
                 request: {
-                    count: comment.length,
+                    campLength: comment.length,
                     type: 'GET',
                     message: 'Get all comments',
                     comments: comment
