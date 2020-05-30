@@ -73,7 +73,7 @@ exports.get_all = async (req, res, next) => {
             }).exec()
             return res.status(200).json({
                 request: {
-                    campLength: order.length,
+                    сount: order.length,
                     type: 'GET',
                     message: 'Get all orders',
                     orders: order
