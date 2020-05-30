@@ -32,7 +32,6 @@ const CampController = require('./controller.js')
 const BASE_URL = "/camp";
 const BASE_URL_1 = "/camps"
 
-
 router.patch(`${BASE_URL}/verification/:campId`, CheckAuth, CampController.verification)
 .post(`${BASE_URL}`,upload.single('photo'), CheckAuth,  CampController.post)
 .get(`${BASE_URL}/:campId`, CampController.get)
