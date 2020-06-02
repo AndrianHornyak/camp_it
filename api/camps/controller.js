@@ -5,7 +5,8 @@ const Owner = require('../owners/model.js')
 const Camp = require('./model.js')
 const Comment = require('../comments/model.js')
 const {
-    isEmpty
+    isEmpty,
+    omit
 } = require('lodash')
 
 const moment = require('moment')
@@ -16,6 +17,9 @@ const Markup = require('telegraf/markup')
 const {
     send
 } = require('../../helpers/telegram')
+
+//helpers
+const { date_filter } = require('../../helpers/camps.js');
 
 
 exports.needverification = async (req, res, next) => {
@@ -137,6 +141,79 @@ exports.get_all = async (req, res, next) => {
         })
     }
 }
+exports.get_filter2 = async (req, res, next) => {
+    try {
+
+        req.query.status = "verificated";
+
+        let params = await omit(req.query, ['start_date', 'end_date']);
+        
+        var camps = await Camp.find(params)
+        var camps = await date_filter(
+            camps, req.query.start_date ? req.query.start_date : null,
+             req.query.end_date ? req.query.end_date : null, 
+             res);
+            
+        if (!isEmpty(camps)) {
+            res.status(200).json({
+                request: {
+                    type: 'GET',
+                    description: 'Get all camps status "verificated"',
+                    сount: camps.length,
+                    camps: camps.map(camp => {
+                        return {
+                            camp: {
+                                date: camp.date,
+                                _id: camp.id,
+                                status: camp.status,
+                                owner: camp.owner,
+                                logo: camp.logo,
+                                photo: camp.photo,
+                                name: camp.name,
+                                start_date: camp.start_date,
+                                end_date: camp.end_date,
+                                place: camp.place,
+                                age_limit: camp.age_limit,
+                                price: camp.price,
+                                rate: camp.rate,
+                                service_aprove: camp.service_aprove,
+                                shilts: {
+                                    shilts_title: camp.shilts_title,
+                                    shilts_price: camp.shilts_price,
+    
+                                },
+                                description: {
+                                    about: camp.about,
+                                    food: camp.food,
+                                    stay: camp.stay,
+                                    infrastructure: camp.infrastructure,
+                                    program: camp.program,
+                                    med_service: camp.med_service,
+                                    safety: camp.sefety,
+                                    transfer: camp.transfer,
+                                    message_admin_camp: camp.message_admin_camp,
+                                    motivation: camp.motivation,
+                                },
+                                director: camp.director
+                            }
+                        }
+                    })
+                }
+            })
+        } else {
+            res.status(404).json({
+                message: 'Camps is not defined.'
+            })
+        }
+        
+    } catch (err) {
+        console.log('err :', JSON.stringify(err, null, 4))
+        res.status(400).json({
+            error: 'Bad request',
+            message: err.message
+        })
+    }
+}
 
 exports.get_byDate = async (req, res, next) => {
     // Camp.find({
@@ -210,12 +287,41 @@ exports.get_byDate = async (req, res, next) => {
 }
 
 exports.get_filter = async (req, res, next) => {
-
     try {
-        const camps = await Camp.find({status:'verificated'},req.query)
-        // const finallyCamps = await camps.find(req.query)
-
-
+        const getList = (model, query) => {
+            const {
+              limit = 25,
+              offset = 0,
+              filter = { sort: { column: "id", type: "desc" } }
+            } = query;
+            if (limit && offset) model.offset(offset).limit(limit);
+            if (filter) {
+              if (filter.sort) model.campBy(filter.sort.column, filter.sort.type);
+              if (filter.where && !isArray(filter.where)) {
+                model.where(
+                  filter.where.column,
+                  filter.where.operation,
+                  filter.where.value
+                );
+              } else if (filter.where && isArray(filter.where)) {
+                filter.where.map((curr, arr, i) =>
+                  i === 1
+                    ? model.where(curr.column, curr.operation, curr.value)
+                    : model.andWhere(curr.column, curr.operation, curr.value)
+                );
+              }
+            }
+            return model;
+          }
+        getList = async ctx => {
+            let camps = Camp.query({status:'verificated'},req.query);
+            camps = service.getList(camps, ctx.request.body);
+            camps = await camps
+              .andWhere("ownerId", ctx.state.owner.id)
+              .campBy("id", "desc");
+            ctx.ok({ camps });
+          };
+        
         // if (req.query.start_date && isEmpty(req.query.end_date)) {
         //     let query = req.query
         //     let camps = await Camp.find({
@@ -229,6 +335,7 @@ exports.get_filter = async (req, res, next) => {
         //         camps, JSON.stringify(camps, null, 4)
         //     )
         // }
+
         res.status(200).json({
             request: {
                 camps: camps

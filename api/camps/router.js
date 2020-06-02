@@ -40,6 +40,6 @@ router.patch(`${BASE_URL}/verification/:campId`, CheckAuth, CampController.verif
 .get(`${BASE_URL_1}/needverification`, CheckAuth, CampController.needverification)
 .get(`${BASE_URL_1}`, CampController.get_all)
 .get(`${BASE_URL_1}/date `, CampController.get_byDate)
-.get(`${BASE_URL_1}/filter`, CampController.get_filter)
+.get(`${BASE_URL_1}/filter`, CampController.get_filter2)
 
 module.exports = router
