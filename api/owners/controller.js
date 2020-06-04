@@ -95,7 +95,7 @@ exports.login = (req, res, next) => {
                                 id: owner._id
                             },
                             process.env.JWT_KEY, {
-                                expiresIn: '20m',
+                                expiresIn: '200m',
                             }
                         )
                         return res.status(200).json({

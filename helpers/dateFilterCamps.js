@@ -2,7 +2,7 @@ const {
     isEmpty
 } = require('lodash');
 
-const date_filter = async (camps, start_date, end_date, res) => {
+const date_filter = async (camps, start_date, end_date) => {
 
     if (isEmpty(start_date) && isEmpty(end_date)) {
         return camps

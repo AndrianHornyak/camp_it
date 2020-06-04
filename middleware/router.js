@@ -7,6 +7,7 @@ const ownerRoute = require('../api/owners/router.js')
 const campRoute = require('../api/camps/router.js')
 const commentRoute = require('../api/comments/router.js')
 const telegramRoute = require('../api/telegram/router.js')
+const categoryCampRoute = require('../api/camps/categoryCamp/router.js')
 
 router.use(orderRoute)
 .use(ownerRoute)
@@ -15,6 +16,7 @@ router.use(orderRoute)
 .use(adminRoute)
 .use(commentRoute)
 .use(telegramRoute)
+.use(categoryCampRoute)
 
 
 

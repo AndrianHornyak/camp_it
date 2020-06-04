@@ -87,8 +87,12 @@ const campSchema = mongoose.Schema({
     },
     motivation: {
         type: String
-    }
+    },
     //desc/
+    category: [{
+        type: String,
+        ref: "CategoryCamp",
+    }]
 })
 
 module.exports = mongoose.model('Camp', campSchema)
