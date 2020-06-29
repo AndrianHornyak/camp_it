@@ -1,9 +1,9 @@
 const {
     isEmpty
 } = require('lodash');
+const moment = require('moment');
 
 const date_filter = async (camps, start_date, end_date) => {
-
     if (isEmpty(start_date) && isEmpty(end_date)) {
         return camps
     }
@@ -12,22 +12,22 @@ const date_filter = async (camps, start_date, end_date) => {
 
     let promise = await Promise.all(
         camps.map(camp => {
-
+            
             if (start_date && isEmpty(end_date)) {
-                if (Date.parse(camp.start_date) >= Date.parse(start_date)) {
+                if (Date.parse(camp.start_date) >= moment(start_date, "DD.MM.YYYY").toDate()) {
                     filtered.push(camp);
                 }
             }
 
             if (end_date && isEmpty(start_date)) {
-                if (Date.parse(camp.end_date) <= Date.parse(end_date)) {
-                    console.log("in")
+                if (Date.parse(camp.end_date) <= moment(end_date, "DD.MM.YYYY").toDate()) {
                     filtered.push(camp);
                 }
             }
 
             if (end_date && start_date) {
-                if (Date.parse(camp.start_date) >= Date.parse(start_date) && Date.parse(camp.end_date) <= Date.parse(end_date)) {
+                if (Date.parse(camp.start_date) >= moment(start_date, "DD.MM.YYYY").toDate() 
+                    && Date.parse(camp.end_date) <= moment(end_date, "DD.MM.YYYY").toDate()) {
                     filtered.push(camp);
                 }
             }
@@ -36,9 +36,7 @@ const date_filter = async (camps, start_date, end_date) => {
 
     if (isEmpty(filtered)) {
         return null
-        // return camps
     } else {
-        console.log("4")
         return filtered;
     }
 }

@@ -3,10 +3,10 @@ const empty = require("lodash").isEmpty;
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 
-// token
+// Token
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// Отправка сообщенія в телеграм
+// Send message to Telegram
 const sendMessage = async (text, keyboard) => {
   try {
     bot.telegram.sendMessage(process.env.ORDER_CHAT_ID, text, keyboard ? Extra.markup(keyboard) : Extra.HTML())
@@ -14,10 +14,7 @@ const sendMessage = async (text, keyboard) => {
     console.log('error :>> ', error);
   }
 }
-// Главна ф-ція яку ми іспользуємо в контролері (Підключаємо в контролер) 
-// Передаємо в функцію статус і обєкт з параметрами
-// Приклад: 
-// send("PAID", {name: "Снікерс", price: toFloat("19.90")})
+
 const send = async (status, params) => {
   const {
     name,
@@ -30,13 +27,6 @@ const send = async (status, params) => {
   let text = "";
 
   switch (status) {
-    case "CREATED":
-      text += `Новая новая заявка!\n`;
-      text += `<b>✅ Статус:</b> Новая \n`;
-      text += `<b>Имя: ${name}</b>\n`;
-      text += `<b>💰 Cумма:</b> ${price}\n`;
-      text += "----------------------------------";
-      break;
       case "CREATED_ORDER":
       text += `Новая заявка!\n`;
       text += `<b>✅ Статус:</b> Новий заказ! \n`;

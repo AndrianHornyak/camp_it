@@ -19,7 +19,12 @@ const {
 } = require('../../helpers/telegram')
 
 //helpers
-const { date_filter } = require('../../helpers/dateFilterCamps.js');
+const {
+    date_filter
+} = require('../../helpers/dateFilterCamps.js');
+const {
+    category_Filter
+} = require('../../helpers/categoryFilterCamps.js')
 
 
 exports.needverification = async (req, res, next) => {
@@ -127,7 +132,8 @@ exports.get_all = async (req, res, next) => {
                                 message_admin_camp: camp.message_admin_camp,
                                 motivation: camp.motivation,
                             },
-                            director: camp.director
+                            director: camp.director,
+                            category: camp.category
                         }
                     }
                 })
@@ -145,12 +151,15 @@ exports.get_all = async (req, res, next) => {
 exports.get_filter = async (req, res, next) => {
     try {
         req.query.status = "verificated";
-        let params = await omit(req.query, ['start_date', 'end_date']);
-        var camps = await Camp.find(params)
-        var camps = await date_filter(
+        let params = await omit(req.query, ['start_date', 'end_date', 'category']);
+        let camps = await Camp.find(params)
+        
+        camps = await date_filter(
             camps, req.query.start_date ? req.query.start_date : null,
-             req.query.end_date ? req.query.end_date : null, );     
+            req.query.end_date ? req.query.end_date : null);
+        camps = await category_Filter(camps,req.query.category)
         if (!isEmpty(camps)) {
+            console.log(camps)
             res.status(200).json({
                 request: {
                     type: 'GET',
@@ -176,7 +185,7 @@ exports.get_filter = async (req, res, next) => {
                                 shilts: {
                                     shilts_title: camp.shilts_title,
                                     shilts_price: camp.shilts_price,
-    
+
                                 },
                                 description: {
                                     about: camp.about,
@@ -202,7 +211,7 @@ exports.get_filter = async (req, res, next) => {
                 message: 'Camps is not defined.'
             })
         }
-        
+
     } catch (err) {
         console.log('err :', JSON.stringify(err, null, 4))
         res.status(400).json({
@@ -215,11 +224,12 @@ exports.get_filter = async (req, res, next) => {
 exports.post = async (req, res, next) => {
     try {
         const owner = await Owner.findById(req.body.ownerId)
-
         let params = req.body;
         params._id = new mongoose.Types.ObjectId()
         params.status = 'verificated'
         params.owner = owner.id
+        // moment(params.start_date, "DD.MM.YYYY").toDate()
+        // moment(params.start_date, "DD.MM.YYYY").toDate()
         params.logo = req.file && req.file.path ? req.file.path : 'https://cdn2.vectorstock.com/i/1000x1000/02/06/khaki-tarpauline-camping-tent-vector-10090206.jpg'
         params.photo = req.file && req.file.path ? req.file.path : 'https://cdn2.vectorstock.com/i/1000x1000/02/06/khaki-tarpauline-camping-tent-vector-10090206.jpg'
         const camp = new Camp(params);
@@ -269,7 +279,7 @@ exports.post = async (req, res, next) => {
                         motivation: camp.motivation,
                     },
                     director: camp.director,
-                    category:camp.category,
+                    category: camp.category,
 
                 }
             }

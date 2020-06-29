@@ -28,13 +28,17 @@ exports.create = async (req, res, next) =>{
     try {
         // const admin = await Admin.findById(req.body.adminId)
         let params = req.body
+        params._id = new mongoose.Types.ObjectId()
         let category = new CategoryCamp(params)
         category.save()
         res.status(201).json({
             request: {
                 type: "POST",
                 description: 'Create category',
-                create: category
+                create: {
+                    _id:category._id,
+                    name:category.name
+                }
             }
         })
     } catch (err) {
